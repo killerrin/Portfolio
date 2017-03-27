@@ -16,5 +16,6 @@ namespace Portfolio.API.Repositories
         }
 
         public DbSet<ProgrammingLanguage> ProgrammingLanguages { get; set; }
+        public DbSet<Framework> Frameworks { get; set; }
     }
 }

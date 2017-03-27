@@ -11,52 +11,52 @@ using Portfolio.API.Repositories;
 namespace Portfolio.API.Controllers
 {
     [Route("api/[controller]")]
-    public class ProgrammingLanguageController : Controller
+    public class FrameworkController : Controller
     {
-        private readonly IRepository<ProgrammingLanguage> _programmingLanguageRepository;
-        public ProgrammingLanguageController(IRepository<ProgrammingLanguage> pLRepository)
+        private readonly IRepository<Framework> _frameworkRepository;
+        public FrameworkController(IRepository<Framework> frameworkRepository)
         {
-            _programmingLanguageRepository = pLRepository;
+            _frameworkRepository = frameworkRepository;
         }
         
         [HttpGet]
-        public IEnumerable<ProgrammingLanguage> GetAll()
+        public IEnumerable<Framework> GetAll()
         {
-            return _programmingLanguageRepository.GetAll();
+            return _frameworkRepository.GetAll();
         }
 
-        [HttpGet("{id}", Name = "GetProgrammingLanguage")]
+        [HttpGet("{id}", Name = "GetFramework")]
         public IActionResult GetById(int id)
         {
-            var item = _programmingLanguageRepository.Find(id);
+            var item = _frameworkRepository.Find(id);
             if (item == null)
                 return NotFound();
             return new ObjectResult(item);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] ProgrammingLanguage item)
+        public IActionResult Create([FromBody] Framework item)
         {
             if (item == null)
                 return BadRequest();
 
-            _programmingLanguageRepository.Add(item);
-            return CreatedAtRoute("GetProgrammingLanguage", new { id = item.Key }, item);
+            _frameworkRepository.Add(item);
+            return CreatedAtRoute("GetFramework", new { id = item.Key }, item);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] ProgrammingLanguage item)
+        public IActionResult Update(int id, [FromBody] Framework item)
         {
             if (item == null || item.Key != id)
                 return BadRequest();
 
-            var repoItem = _programmingLanguageRepository.Find(id);
+            var repoItem = _frameworkRepository.Find(id);
             if (repoItem == null)
                 return NotFound();
 
             repoItem.Name = item.Name;
 
-            _programmingLanguageRepository.Update(repoItem);
+            _frameworkRepository.Update(repoItem);
 
             return new NoContentResult();
         }
@@ -64,11 +64,11 @@ namespace Portfolio.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var repoItem = _programmingLanguageRepository.Find(id);
+            var repoItem = _frameworkRepository.Find(id);
             if (repoItem == null)
                 return NotFound();
 
-            _programmingLanguageRepository.Remove(id);
+            _frameworkRepository.Remove(id);
             return new NoContentResult();
         }
     }

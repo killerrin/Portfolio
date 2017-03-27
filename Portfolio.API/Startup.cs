@@ -39,6 +39,7 @@ namespace Portfolio.API
 
             // Add Dependency Injection for our Repositories
             services.AddSingleton<IRepository<ProgrammingLanguage>, ProgrammingLanguageRepository>();
+            services.AddSingleton<IRepository<Framework>, FrameworkRepository>();
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
