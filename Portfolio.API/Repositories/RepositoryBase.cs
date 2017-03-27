@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Portfolio.API.Models
+namespace Portfolio.API.Repositories
 {
     public abstract class RepositoryBase<T> : IRepository<T> where T : class
     {
         protected readonly PortfolioContext _context;
         protected DbSet<T> _dbSet;
+
+        public int Count => GetAll().ToList().Count;
 
         public RepositoryBase(PortfolioContext context)
         {
@@ -21,6 +23,11 @@ namespace Portfolio.API.Models
         {
             _dbSet.Add(item);
             _context.SaveChanges();
+        }
+
+        public virtual bool Exists(int key)
+        {
+            return Find(key) != null;
         }
 
         public virtual T Find(int key)
@@ -48,11 +55,16 @@ namespace Portfolio.API.Models
         {
             _dbSet.Attach(item);
             _context.Entry(item).State = EntityState.Modified;
+            _context.SaveChanges();
         }
 
         public virtual void Commit()
         {
             _context.SaveChanges();
+        }
+        public virtual void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }
