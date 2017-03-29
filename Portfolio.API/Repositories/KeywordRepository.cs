@@ -11,11 +11,11 @@ namespace Portfolio.API.Repositories
         public KeywordRepository(PortfolioContext context)
             : base(context)
         {
-            Add(new Keyword { Name = "Multiplayer" });
-            Add(new Keyword { Name = "Async" });
-            Add(new Keyword { Name = "OOP" });
-            Add(new Keyword { Name = "Json" });
-            Add(new Keyword { Name = "XML" });
+            //Add(new Keyword { Name = "Multiplayer" });
+            //Add(new Keyword { Name = "Async" });
+            //Add(new Keyword { Name = "OOP" });
+            //Add(new Keyword { Name = "Json" });
+            //Add(new Keyword { Name = "XML" });
         }
     }
 }

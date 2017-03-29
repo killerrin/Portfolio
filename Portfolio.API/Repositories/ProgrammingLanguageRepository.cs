@@ -11,9 +11,9 @@ namespace Portfolio.API.Repositories
         public ProgrammingLanguageRepository(PortfolioContext context)
             : base(context)
         {
-            Add(new ProgrammingLanguage { Name = "C#" });
-            Add(new ProgrammingLanguage { Name = "C++" });
-            Add(new ProgrammingLanguage { Name = "JavaScript" });
+            //Add(new ProgrammingLanguage { Name = "C#" });
+            //Add(new ProgrammingLanguage { Name = "C++" });
+            //Add(new ProgrammingLanguage { Name = "JavaScript" });
         }
     }
 }

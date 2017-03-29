@@ -11,11 +11,11 @@ namespace Portfolio.API.Repositories
         public FrameworkRepository(PortfolioContext context)
             : base(context)
         {
-            Add(new Framework { Name = "ASP.Net" });
-            Add(new Framework { Name = "Web API" });
-            Add(new Framework { Name = "JQuery" });
-            Add(new Framework { Name = "Json.NET" });
-            Add(new Framework { Name = "Monogame" });
+            //Add(new Framework { Name = "ASP.Net" });
+            //Add(new Framework { Name = "Web API" });
+            //Add(new Framework { Name = "JQuery" });
+            //Add(new Framework { Name = "Json.NET" });
+            //Add(new Framework { Name = "Monogame" });
         }
     }
 }

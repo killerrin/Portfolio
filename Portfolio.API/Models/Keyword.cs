@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Portfolio.API.Models.JoinTables;
+using Newtonsoft.Json;
 
 namespace Portfolio.API.Models
 {
@@ -15,6 +16,7 @@ namespace Portfolio.API.Models
         public int ID { get; set; }
         public string Name { get; set; }
 
+        [JsonIgnore]
         public List<PortfolioItemKeyword> Portfolios { get; set; } = new List<PortfolioItemKeyword>();
         public Keyword()
         {

@@ -11,12 +11,12 @@ namespace Portfolio.API.Repositories
         public CategoryRepository(PortfolioContext context)
             : base(context)
         {
-            Add(new Category { Name = "Game" });
-            Add(new Category { Name = "Software" });
-            Add(new Category { Name = "Website" });
-            Add(new Category { Name = "API/Framework" });
-            Add(new Category { Name = "Sandbox" });
-            Add(new Category { Name = "Other" });
+            //Add(new Category { Name = "Game" });
+            //Add(new Category { Name = "Software" });
+            //Add(new Category { Name = "Website" });
+            //Add(new Category { Name = "API/Framework" });
+            //Add(new Category { Name = "Sandbox" });
+            //Add(new Category { Name = "Other" });
         }
     }
 }
