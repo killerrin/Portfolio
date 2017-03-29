@@ -8,15 +8,15 @@ using Portfolio.API.Models.JoinTables;
 
 namespace Portfolio.API.Models
 {
-    public class Framework
+    public class Category
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
         public string Name { get; set; }
 
-        public List<PortfolioItemFramework> Portfolios { get; set; } = new List<PortfolioItemFramework>();
-        public Framework()
+        public List<PortfolioItemCategory> Portfolios { get; set; } = new List<PortfolioItemCategory>();
+        public Category()
         {
 
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Portfolio.API.Models.JoinTables;
 
 namespace Portfolio.API.Models
 {
@@ -11,7 +12,13 @@ namespace Portfolio.API.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Key { get; set; }
+        public int ID { get; set; }
         public string Name { get; set; }
+
+        public List<PortfolioItemProgLanguage> Portfolios { get; set; } = new List<PortfolioItemProgLanguage>();
+        public ProgrammingLanguage()
+        {
+
+        }
     }
 }

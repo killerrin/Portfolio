@@ -11,52 +11,52 @@ using Portfolio.API.Repositories;
 namespace Portfolio.API.Controllers
 {
     [Route("api/[controller]")]
-    public class FrameworkController : Controller
+    public class CategoryController : Controller
     {
-        private readonly IRepository<Framework> _frameworkRepository;
-        public FrameworkController(IRepository<Framework> frameworkRepository)
+        private readonly IRepository<Category> _categoryRepository;
+        public CategoryController(IRepository<Category> categoryRepository)
         {
-            _frameworkRepository = frameworkRepository;
+            _categoryRepository = categoryRepository;
         }
         
         [HttpGet]
-        public IEnumerable<Framework> GetAll()
+        public IEnumerable<Category> GetAll()
         {
-            return _frameworkRepository.GetAll();
+            return _categoryRepository.GetAll();
         }
 
-        [HttpGet("{id}", Name = "GetFramework")]
+        [HttpGet("{id}", Name = "GetCategory")]
         public IActionResult GetById(int id)
         {
-            var item = _frameworkRepository.Find(id);
+            var item = _categoryRepository.Find(id);
             if (item == null)
                 return NotFound();
             return new ObjectResult(item);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Framework item)
+        public IActionResult Create([FromBody] Category item)
         {
             if (item == null)
                 return BadRequest();
 
-            _frameworkRepository.Add(item);
-            return CreatedAtRoute("GetFramework", new { id = item.ID }, item);
+            _categoryRepository.Add(item);
+            return CreatedAtRoute("GetCategory", new { id = item.ID }, item);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Framework item)
+        public IActionResult Update(int id, [FromBody] Category item)
         {
             if (item == null || item.ID != id)
                 return BadRequest();
 
-            var repoItem = _frameworkRepository.Find(id);
+            var repoItem = _categoryRepository.Find(id);
             if (repoItem == null)
                 return NotFound();
 
             repoItem.Name = item.Name;
 
-            _frameworkRepository.Update(repoItem);
+            _categoryRepository.Update(repoItem);
 
             return new NoContentResult();
         }
@@ -64,11 +64,11 @@ namespace Portfolio.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var repoItem = _frameworkRepository.Find(id);
+            var repoItem = _categoryRepository.Find(id);
             if (repoItem == null)
                 return NotFound();
 
-            _frameworkRepository.Remove(id);
+            _categoryRepository.Remove(id);
             return new NoContentResult();
         }
     }

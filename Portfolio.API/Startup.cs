@@ -31,15 +31,20 @@ namespace Portfolio.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<PortfolioContext>(opt => opt.UseInMemoryDatabase());
-
             // Add framework services.
             services.AddMvc();
             services.AddLogging();
 
+            // Add Database
+            //services.AddDbContext<PortfolioContext>(opt => opt.UseInMemoryDatabase());
+            var connection = @"Data Source=ANDREWPC-SKYNET;Initial Catalog=portfolio;Integrated Security=True;Pooling=False";
+            services.AddDbContext<PortfolioContext>(options => options.UseSqlServer(connection));
+
             // Add Dependency Injection for our Repositories
             services.AddSingleton<IRepository<ProgrammingLanguage>, ProgrammingLanguageRepository>();
             services.AddSingleton<IRepository<Framework>, FrameworkRepository>();
+            services.AddSingleton<IRepository<Keyword>, KeywordRepository>();
+            services.AddSingleton<IRepository<Category>, CategoryRepository>();
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>

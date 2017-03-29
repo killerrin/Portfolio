@@ -11,52 +11,52 @@ using Portfolio.API.Repositories;
 namespace Portfolio.API.Controllers
 {
     [Route("api/[controller]")]
-    public class FrameworkController : Controller
+    public class KeywordController : Controller
     {
-        private readonly IRepository<Framework> _frameworkRepository;
-        public FrameworkController(IRepository<Framework> frameworkRepository)
+        private readonly IRepository<Keyword> _keywordRepository;
+        public KeywordController(IRepository<Keyword> keywordRepository)
         {
-            _frameworkRepository = frameworkRepository;
+            _keywordRepository = keywordRepository;
         }
         
         [HttpGet]
-        public IEnumerable<Framework> GetAll()
+        public IEnumerable<Keyword> GetAll()
         {
-            return _frameworkRepository.GetAll();
+            return _keywordRepository.GetAll();
         }
 
-        [HttpGet("{id}", Name = "GetFramework")]
+        [HttpGet("{id}", Name = "GetKeyword")]
         public IActionResult GetById(int id)
         {
-            var item = _frameworkRepository.Find(id);
+            var item = _keywordRepository.Find(id);
             if (item == null)
                 return NotFound();
             return new ObjectResult(item);
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Framework item)
+        public IActionResult Create([FromBody] Keyword item)
         {
             if (item == null)
                 return BadRequest();
 
-            _frameworkRepository.Add(item);
-            return CreatedAtRoute("GetFramework", new { id = item.ID }, item);
+            _keywordRepository.Add(item);
+            return CreatedAtRoute("GetKeyword", new { id = item.ID }, item);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Framework item)
+        public IActionResult Update(int id, [FromBody] Keyword item)
         {
             if (item == null || item.ID != id)
                 return BadRequest();
 
-            var repoItem = _frameworkRepository.Find(id);
+            var repoItem = _keywordRepository.Find(id);
             if (repoItem == null)
                 return NotFound();
 
             repoItem.Name = item.Name;
 
-            _frameworkRepository.Update(repoItem);
+            _keywordRepository.Update(repoItem);
 
             return new NoContentResult();
         }
@@ -64,11 +64,11 @@ namespace Portfolio.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var repoItem = _frameworkRepository.Find(id);
+            var repoItem = _keywordRepository.Find(id);
             if (repoItem == null)
                 return NotFound();
 
-            _frameworkRepository.Remove(id);
+            _keywordRepository.Remove(id);
             return new NoContentResult();
         }
     }

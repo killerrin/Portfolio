@@ -41,13 +41,13 @@ namespace Portfolio.API.Controllers
                 return BadRequest();
 
             _programmingLanguageRepository.Add(item);
-            return CreatedAtRoute("GetProgrammingLanguage", new { id = item.Key }, item);
+            return CreatedAtRoute("GetProgrammingLanguage", new { id = item.ID }, item);
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] ProgrammingLanguage item)
         {
-            if (item == null || item.Key != id)
+            if (item == null || item.ID != id)
                 return BadRequest();
 
             var repoItem = _programmingLanguageRepository.Find(id);
