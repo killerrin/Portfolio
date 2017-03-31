@@ -10,6 +10,8 @@ namespace Portfolio.API.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
         public string Name { get; set; }
+
+        [DataType(DataType.Url)]
         public string Url { get; set; }
 
         public int PortfolioItemID { get; set; }
