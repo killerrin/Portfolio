@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
+    <AssemblyName>Portfolio.API</AssemblyName>
+    <RootNamespace>Portfolio.API</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>

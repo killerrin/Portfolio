@@ -45,6 +45,8 @@ namespace Portfolio.API
             services.AddSingleton<IRepository<Framework>, FrameworkRepository>();
             services.AddSingleton<IRepository<Keyword>, KeywordRepository>();
             services.AddSingleton<IRepository<Category>, CategoryRepository>();
+            services.AddSingleton<IRepository<PortfolioItem>, PortfolioItemRepository>();
+            services.AddSingleton<IRepository<PortfolioItemLink>, PortfolioItemLinkRepository>();
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>

@@ -21,6 +21,7 @@ namespace Portfolio.API.Repositories
         public DbSet<Framework> Frameworks { get; set; }
         public DbSet<Keyword> Keywords { get; set; }
         public DbSet<PortfolioItem> PortfolioItems { get; set; }
+        public DbSet<PortfolioItemLink> PortfolioItemLinks { get; set; }
         public DbSet<ProgrammingLanguage> ProgrammingLanguages { get; set; }
 
         // Create the Model
