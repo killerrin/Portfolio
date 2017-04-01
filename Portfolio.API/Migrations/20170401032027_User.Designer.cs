@@ -8,9 +8,10 @@ using Portfolio.API.Repositories;
 namespace Portfolio.API.Migrations
 {
     [DbContext(typeof(PortfolioContext))]
-    partial class PortfolioContextModelSnapshot : ModelSnapshot
+    [Migration("20170401032027_User")]
+    partial class User
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -170,10 +171,6 @@ namespace Portfolio.API.Migrations
                     b.Property<string>("Username");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("Auth_Token");
-
-                    b.HasIndex("Username");
 
                     b.ToTable("Users");
                 });

@@ -11,6 +11,7 @@ namespace Portfolio.API.Repositories
         protected readonly PortfolioContext _context;
         protected DbSet<T> _dbSet;
 
+        public (PortfolioContext Context, DbSet<T> DbSet) DatabaseInfo { get { return (_context, _dbSet); } }
         public int Count => GetAll().ToList().Count;
 
         public RepositoryBase(PortfolioContext context)

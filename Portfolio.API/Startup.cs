@@ -41,6 +41,8 @@ namespace Portfolio.API
             services.AddDbContext<PortfolioContext>(options => options.UseSqlServer(connection));
 
             // Add Dependency Injection for our Repositories
+            services.AddSingleton<IRepository<User>, UserRepository>();
+
             services.AddSingleton<IRepository<ProgrammingLanguage>, ProgrammingLanguageRepository>();
             services.AddSingleton<IRepository<Framework>, FrameworkRepository>();
             services.AddSingleton<IRepository<Keyword>, KeywordRepository>();

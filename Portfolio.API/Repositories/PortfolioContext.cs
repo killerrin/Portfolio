@@ -23,10 +23,12 @@ namespace Portfolio.API.Repositories
         public DbSet<PortfolioItem> PortfolioItems { get; set; }
         public DbSet<PortfolioItemLink> PortfolioItemLinks { get; set; }
         public DbSet<ProgrammingLanguage> ProgrammingLanguages { get; set; }
+        public DbSet<User> Users { get; set; }
 
         // Create the Model
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            #region Join Tables
             #region Category Join Table
             modelBuilder.Entity<PortfolioItemCategory>()
                 .HasKey(x => new { x.PortfolioItemID, x.CategoryID });
@@ -86,6 +88,14 @@ namespace Portfolio.API.Repositories
                 .WithMany(f => f.Portfolios)
                 .HasForeignKey(p => p.ProgrammingLanguageID);
             #endregion
+            #endregion
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Username);
+
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Auth_Token);
+
         }
     }
 }
