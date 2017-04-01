@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Portfolio.API.Models;
 using Portfolio.API.Repositories;
+using Portfolio.API.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,11 +15,14 @@ namespace Portfolio.API.Controllers
     public class FrameworkController : Controller
     {
         private readonly IRepository<Framework> _frameworkRepository;
+        private readonly AuthenticationService _authenticationService;
+
         public FrameworkController(IRepository<Framework> frameworkRepository)
         {
             _frameworkRepository = frameworkRepository;
+            _authenticationService = new AuthenticationService(new UserRepository(frameworkRepository.DatabaseInfo.Context));
         }
-        
+
         [HttpGet]
         public IEnumerable<Framework> GetAll()
         {
@@ -35,8 +39,11 @@ namespace Portfolio.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Framework item)
+        public IActionResult Create([FromHeader(Name = "Authorization")] string authToken, [FromBody] Framework item)
         {
+            if (!_authenticationService.VerifyAuthToken(authToken))
+                return BadRequest("Invalid AuthToken");
+
             if (item == null)
                 return BadRequest();
 
@@ -45,8 +52,11 @@ namespace Portfolio.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] Framework item)
+        public IActionResult Update(int id, [FromHeader(Name = "Authorization")] string authToken, [FromBody] Framework item)
         {
+            if (!_authenticationService.VerifyAuthToken(authToken))
+                return BadRequest("Invalid AuthToken");
+
             if (item == null || item.ID != id)
                 return BadRequest();
 
@@ -62,8 +72,11 @@ namespace Portfolio.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int id, [FromHeader(Name = "Authorization")] string authToken)
         {
+            if (!_authenticationService.VerifyAuthToken(authToken))
+                return BadRequest("Invalid AuthToken");
+
             var repoItem = _frameworkRepository.Find(id);
             if (repoItem == null)
                 return NotFound();

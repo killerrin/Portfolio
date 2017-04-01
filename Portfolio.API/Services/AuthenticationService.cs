@@ -37,8 +37,11 @@ namespace Portfolio.API.Services
         #region AuthToken
         public bool VerifyAuthToken(string authToken)
         {
+            if (string.IsNullOrWhiteSpace(authToken))
+                return false;
+
             var user = _userRepository.GetAll()
-                .Where(x => x.Auth_Token == authToken)
+                .Where(x => x.AuthToken == authToken)
                 .FirstOrDefault();
 
             if (user == null)

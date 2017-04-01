@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Portfolio.API.Repositories
 {
-    public interface IRepository<T>
+    public interface IRepository<T> where T : class
     {
+        (PortfolioContext Context, DbSet<T> DbSet) DatabaseInfo { get; }
         int Count { get; }
 
         void Add(T item);

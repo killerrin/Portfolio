@@ -94,7 +94,7 @@ namespace Portfolio.API.Repositories
                 .HasIndex(u => u.Username);
 
             modelBuilder.Entity<User>()
-                .HasIndex(u => u.Auth_Token);
+                .HasIndex(u => u.AuthToken);
 
         }
     }

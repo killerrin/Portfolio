@@ -8,9 +8,10 @@ using Portfolio.API.Repositories;
 namespace Portfolio.API.Migrations
 {
     [DbContext(typeof(PortfolioContext))]
-    partial class PortfolioContextModelSnapshot : ModelSnapshot
+    [Migration("20170401051904_UpdatedUserColumns")]
+    partial class UpdatedUserColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")

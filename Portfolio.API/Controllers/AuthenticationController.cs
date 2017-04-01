@@ -39,8 +39,11 @@ namespace Portfolio.API.Controllers
             {
                 if (service.VerifyPassword(item.Password, user.Password_Hash))
                 {
-                    var response = (id: user.ID, userName: user.Username, authToken: user.Auth_Token);
-                    return new ObjectResult(response);
+                    UserAuthenticated authenticatedUser = new UserAuthenticated();
+                    authenticatedUser.ID = user.ID;
+                    authenticatedUser.Username = user.Username;
+                    authenticatedUser.AuthToken = user.AuthToken;
+                    return new ObjectResult(authenticatedUser);
                 }
             }
 
@@ -50,54 +53,6 @@ namespace Portfolio.API.Controllers
                 service.FakeHash();
             }
             return BadRequest("Either your username or password is invalid. Please try again.");
-        }
-
-        [HttpPut(Name ="CreateUser")]
-        public IActionResult Create([FromBody] UserCreate item)
-        {
-            if (!AuthenticationService.EnableUserCreation)
-                return BadRequest("User Creation is currently disabled");
-
-            if (string.IsNullOrWhiteSpace(item.Username) || string.IsNullOrWhiteSpace(item.Email) ||string.IsNullOrWhiteSpace(item.Password))
-                return BadRequest("Please provide all Username, Email and Password");
-
-            AuthenticationService service = new AuthenticationService(_userRepository);
-
-            // Get the User and Authenticate
-            User user = _userRepository.GetAll()
-                    .Where(x => x.Username.Equals(item.Username))
-                    .FirstOrDefault();
-
-            // If the user exists, ABORT!
-            if (user != null)
-            {
-                // Run the hashing algorithm a couple times to make it impossible to determine partial success/failure based off of Server Response Times
-                for (int i = 0; i < 3; i++)
-                {
-                    service.FakeHash();
-                }
-                return BadRequest("This user already exists");
-            }
-
-            // Validate the Inputs
-            if (!service.ValidateUsername(item.Username))
-                return BadRequest();
-            if (!service.ValidateEmail(item.Email))
-                return BadRequest();
-            if (!service.ValidatePassword(item.Password))
-                return BadRequest();
-
-            user = new User();
-            user.Username = item.Username;
-            user.Email = item.Email;
-
-            var userCount = _userRepository.Count + 1;
-            user.Password_Hash = service.HashPassword(userCount, item.Password);
-            user.Auth_Token = service.GenerateAuthToken(userCount, user.Username);
-            _userRepository.Add(user);
-
-            var response = (id: user.ID, userName: user.Username, authToken: user.Auth_Token);
-            return new ObjectResult(response);
         }
     }
 }

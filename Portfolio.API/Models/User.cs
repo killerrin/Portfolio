@@ -28,7 +28,7 @@ namespace Portfolio.API.Models
         public string Password_Hash { get; set; }
 
         [JsonIgnore]
-        public string Auth_Token { get; set; }
+        public string AuthToken { get; set; }
     }
 
     public class UserLogin
@@ -53,5 +53,17 @@ namespace Portfolio.API.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+    }
+
+    public class UserAuthenticated
+    {
+        [Required]
+        public int ID { get; set; }
+
+        [Required]
+        public string Username { get; set; }
+
+        [Required]
+        public string AuthToken { get; set; }
     }
 }

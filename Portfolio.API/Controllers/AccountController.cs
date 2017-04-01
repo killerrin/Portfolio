@@ -62,11 +62,14 @@ namespace Portfolio.API.Controllers
 
             var userCount = _userRepository.Count + 1;
             user.Password_Hash = service.HashPassword(userCount, item.Password);
-            user.Auth_Token = service.GenerateAuthToken(userCount, user.Username);
+            user.AuthToken = service.GenerateAuthToken(userCount, user.Username);
             _userRepository.Add(user);
 
-            var response = (id: user.ID, userName: user.Username, authToken: user.Auth_Token);
-            return new ObjectResult(response);
+            UserAuthenticated authenticatedUser = new UserAuthenticated();
+            authenticatedUser.ID = user.ID;
+            authenticatedUser.Username = user.Username;
+            authenticatedUser.AuthToken = user.AuthToken;
+            return new ObjectResult(authenticatedUser);
         }
     }
 }
