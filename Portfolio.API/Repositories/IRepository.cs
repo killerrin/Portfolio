@@ -15,6 +15,7 @@ namespace Portfolio.API.Repositories
         bool Exists(int key);
         T Find(int key);
         IEnumerable<T> GetAll();
+        IQueryable<T> GetAllQuery();
         void Remove(int key);
         void Update(T item);
 

@@ -12,7 +12,7 @@ namespace Portfolio.API.Repositories
         protected DbSet<T> _dbSet;
 
         public (PortfolioContext Context, DbSet<T> DbSet) DatabaseInfo { get { return (_context, _dbSet); } }
-        public int Count => GetAll().ToList().Count;
+        public int Count => GetAllQuery().Count();
 
         public RepositoryBase(PortfolioContext context)
         {
@@ -37,6 +37,10 @@ namespace Portfolio.API.Repositories
         }
 
         public virtual IEnumerable<T> GetAll()
+        {
+            return _dbSet;
+        }
+        public virtual IQueryable<T> GetAllQuery()
         {
             return _dbSet;
         }
