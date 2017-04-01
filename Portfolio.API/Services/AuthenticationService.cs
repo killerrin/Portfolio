@@ -40,12 +40,28 @@ namespace Portfolio.API.Services
             if (string.IsNullOrWhiteSpace(authToken))
                 return false;
 
-            var user = _userRepository.GetAll()
-                .Where(x => x.AuthToken == authToken)
+            var user = _userRepository.GetAllQuery()
+                .Where(x => x.AuthToken.Equals(authToken))
                 .FirstOrDefault();
 
             if (user == null)
                 return false;
+            return true;
+        }
+
+        public bool VerifyAuthTokenAndID(int id, string authToken)
+        {
+            if (string.IsNullOrWhiteSpace(authToken))
+                return false;
+
+            var user = _userRepository.GetAllQuery()
+                .Where(x => x.ID == id)
+                .Where(x => x.AuthToken.Equals(authToken))
+                .FirstOrDefault();
+
+            if (user == null)
+                return false;
+
             return true;
         }
 
