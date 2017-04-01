@@ -16,9 +16,12 @@ namespace Portfolio.API.Controllers
     public class AccountController : Controller
     {
         private readonly IRepository<User> _userRepository;
+        private readonly AuthenticationService _authenticationService;
+
         public AccountController(IRepository<User> userRepository)
         {
             _userRepository = userRepository;
+            _authenticationService = new AuthenticationService(userRepository);
         }
 
         [HttpPost(Name ="CreateUser")]
@@ -30,30 +33,23 @@ namespace Portfolio.API.Controllers
             if (string.IsNullOrWhiteSpace(item.Username) || string.IsNullOrWhiteSpace(item.Email) ||string.IsNullOrWhiteSpace(item.Password))
                 return BadRequest("Please provide all Username, Email and Password");
 
-            AuthenticationService service = new AuthenticationService(_userRepository);
-
             // Get the User and Authenticate
-            User user = _userRepository.GetAll()
+            User user = _userRepository.GetAllQuery()
                     .Where(x => x.Username.Equals(item.Username))
                     .FirstOrDefault();
 
             // If the user exists, ABORT!
             if (user != null)
             {
-                // Run the hashing algorithm a couple times to make it impossible to determine partial success/failure based off of Server Response Times
-                for (int i = 0; i < 3; i++)
-                {
-                    service.FakeHash();
-                }
                 return BadRequest("This user already exists");
             }
 
             // Validate the Inputs
-            if (!service.ValidateUsername(item.Username))
+            if (!_authenticationService.ValidateUsername(item.Username))
                 return BadRequest();
-            if (!service.ValidateEmail(item.Email))
+            if (!_authenticationService.ValidateEmail(item.Email))
                 return BadRequest();
-            if (!service.ValidatePassword(item.Password))
+            if (!_authenticationService.ValidatePassword(item.Password))
                 return BadRequest();
 
             user = new User();
@@ -61,8 +57,8 @@ namespace Portfolio.API.Controllers
             user.Email = item.Email;
 
             var userCount = _userRepository.Count + 1;
-            user.Password_Hash = service.HashPassword(userCount, item.Password);
-            user.AuthToken = service.GenerateAuthToken(userCount, user.Username);
+            user.Password_Hash = _authenticationService.HashPassword(userCount, item.Password);
+            user.AuthToken = _authenticationService.GenerateAuthToken(userCount, user.Username);
             _userRepository.Add(user);
 
             UserAuthenticated authenticatedUser = new UserAuthenticated();
@@ -70,6 +66,20 @@ namespace Portfolio.API.Controllers
             authenticatedUser.Username = user.Username;
             authenticatedUser.AuthToken = user.AuthToken;
             return new ObjectResult(authenticatedUser);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id, [FromHeader(Name = "Authorization")] string authToken)
+        {
+            if (!_authenticationService.VerifyAuthTokenAndID(id, authToken))
+                return BadRequest("Invalid AuthToken");
+
+            var repoItem = _userRepository.Find(id);
+            if (repoItem == null)
+                return NotFound();
+
+            _userRepository.Remove(id);
+            return new NoContentResult();
         }
     }
 }

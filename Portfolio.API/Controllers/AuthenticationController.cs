@@ -16,9 +16,12 @@ namespace Portfolio.API.Controllers
     public class AuthenticationController : Controller
     {
         private readonly IRepository<User> _userRepository;
+        private readonly AuthenticationService _authenticationService;
+
         public AuthenticationController(IRepository<User> userRepository)
         {
             _userRepository = userRepository;
+            _authenticationService = new AuthenticationService(userRepository);
         }
 
 
@@ -28,16 +31,14 @@ namespace Portfolio.API.Controllers
             if (string.IsNullOrWhiteSpace(item.Username) || string.IsNullOrWhiteSpace(item.Password))
                 return BadRequest();
 
-            AuthenticationService service = new AuthenticationService(_userRepository);
-
             // Get the User and Authenticate
-            User user = _userRepository.GetAll()
+            User user = _userRepository.GetAllQuery()
                     .Where(x => x.Username.Equals(item.Username))
                     .FirstOrDefault();
 
             if (user != null)
             {
-                if (service.VerifyPassword(item.Password, user.Password_Hash))
+                if (_authenticationService.VerifyPassword(item.Password, user.Password_Hash))
                 {
                     UserAuthenticated authenticatedUser = new UserAuthenticated();
                     authenticatedUser.ID = user.ID;
@@ -47,10 +48,11 @@ namespace Portfolio.API.Controllers
                 }
             }
 
-            // Run the hashing algorithm a couple times to make it impossible to determine partial success/failure based off of Server Response Times
+            // Run the hashing algorithm a couple times to make it harder to determine partial success/failure based off of Server Response Times
+            // In addition to slowing down brute force attempts
             for (int i = 0; i < 3; i++)
             {
-                service.FakeHash();
+                _authenticationService.FakeHash();
             }
             return BadRequest("Either your username or password is invalid. Please try again.");
         }
