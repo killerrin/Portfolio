@@ -29,7 +29,7 @@ namespace Portfolio.API.Controllers
         public IActionResult Login([FromBody] UserLogin item)
         {
             if (string.IsNullOrWhiteSpace(item.Username) || string.IsNullOrWhiteSpace(item.Password))
-                return BadRequest();
+                return BadRequest("Please enter in your Username and Password");
 
             // Get the User and Authenticate
             User user = _userRepository.GetAllQuery()

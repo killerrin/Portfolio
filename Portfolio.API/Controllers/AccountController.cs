@@ -28,9 +28,9 @@ namespace Portfolio.API.Controllers
         public IActionResult Create([FromBody] UserCreate item)
         {
             if (!AuthenticationService.EnableUserCreation)
-                return BadRequest("User Creation is currently disabled");
+                return BadRequest("User Creation is currently disabled by the administrator ");
 
-            if (string.IsNullOrWhiteSpace(item.Username) || string.IsNullOrWhiteSpace(item.Email) ||string.IsNullOrWhiteSpace(item.Password))
+            if (string.IsNullOrWhiteSpace(item.Username) || string.IsNullOrWhiteSpace(item.Email) || string.IsNullOrWhiteSpace(item.Password))
                 return BadRequest("Please provide all Username, Email and Password");
 
             // Get the User and Authenticate
@@ -40,9 +40,7 @@ namespace Portfolio.API.Controllers
 
             // If the user exists, ABORT!
             if (user != null)
-            {
                 return BadRequest("This user already exists");
-            }
 
             // Validate the Inputs
             if (!_authenticationService.ValidateUsername(item.Username))
