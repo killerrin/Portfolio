@@ -14,7 +14,16 @@ namespace Portfolio.API.Services
     public class AuthenticationService
     {
         private static Random _random = new Random();
-        public static bool EnableUserCreation = true;
+        public static bool EnableUserCreation
+        {
+            get
+            {
+                var configAllowed = Startup.Configuration["AccountCreationEnabled"];
+                if (bool.TryParse(configAllowed, out bool result))
+                    return result;
+                return false;
+            }
+        }
 
         private readonly IRepository<User> _userRepository;
         public AuthenticationService(IRepository<User> userRepository)

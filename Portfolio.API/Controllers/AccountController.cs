@@ -44,11 +44,11 @@ namespace Portfolio.API.Controllers
 
             // Validate the Inputs
             if (!_authenticationService.ValidateUsername(item.Username))
-                return BadRequest();
+                return BadRequest("The username is invalid or has already been taken");
             if (!_authenticationService.ValidateEmail(item.Email))
-                return BadRequest();
+                return BadRequest("The email is invalid");
             if (!_authenticationService.ValidatePassword(item.Password))
-                return BadRequest();
+                return BadRequest("The password is invalid");
 
             user = new User();
             user.Username = item.Username;
