@@ -252,3 +252,4 @@ paket-files/
 .idea/
 *.sln.iml
 Portfolio.API/secretappsettings.json
+Portfolio.API/secretappsettings.Development.json
