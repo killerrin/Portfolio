@@ -21,7 +21,9 @@ namespace Portfolio.API
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("secretappsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile($"secretappsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -36,8 +38,10 @@ namespace Portfolio.API
             services.AddLogging();
 
             // Add Database
+
             //services.AddDbContext<PortfolioContext>(opt => opt.UseInMemoryDatabase());
-            var connection = @"Data Source=ANDREWPC-SKYNET;Initial Catalog=portfolio;Integrated Security=True;Pooling=False";
+            //var connection = @"Data Source=ANDREWPC-SKYNET;Initial Catalog=portfolio;Integrated Security=True;Pooling=False";
+            var connection = Configuration["dbConnectionString"];
             services.AddDbContext<PortfolioContext>(options => options.UseSqlServer(connection));
 
             // Add Dependency Injection for our Repositories
