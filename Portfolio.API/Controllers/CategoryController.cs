@@ -47,7 +47,7 @@ namespace Portfolio.API.Controllers
             if (item == null)
                 return BadRequest();
 
-            _categoryRepository.Add(item);
+            _categoryRepository.AddAndCommit(item);
             return CreatedAtRoute("GetCategory", new { id = item.ID }, item);
         }
 
@@ -66,7 +66,7 @@ namespace Portfolio.API.Controllers
 
             repoItem.Name = item.Name;
 
-            _categoryRepository.Update(repoItem);
+            _categoryRepository.UpdateAndCommit(repoItem);
 
             return new NoContentResult();
         }
@@ -81,7 +81,7 @@ namespace Portfolio.API.Controllers
             if (repoItem == null)
                 return NotFound();
 
-            _categoryRepository.Remove(id);
+            _categoryRepository.RemoveAndCommit(id);
             return new NoContentResult();
         }
     }

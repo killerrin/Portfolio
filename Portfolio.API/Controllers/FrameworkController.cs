@@ -47,7 +47,7 @@ namespace Portfolio.API.Controllers
             if (item == null)
                 return BadRequest();
 
-            _frameworkRepository.Add(item);
+            _frameworkRepository.AddAndCommit(item);
             return CreatedAtRoute("GetFramework", new { id = item.ID }, item);
         }
 
@@ -66,7 +66,7 @@ namespace Portfolio.API.Controllers
 
             repoItem.Name = item.Name;
 
-            _frameworkRepository.Update(repoItem);
+            _frameworkRepository.UpdateAndCommit(repoItem);
 
             return new NoContentResult();
         }
@@ -81,7 +81,7 @@ namespace Portfolio.API.Controllers
             if (repoItem == null)
                 return NotFound();
 
-            _frameworkRepository.Remove(id);
+            _frameworkRepository.RemoveAndCommit(id);
             return new NoContentResult();
         }
     }

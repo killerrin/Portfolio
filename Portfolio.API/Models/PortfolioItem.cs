@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading.Tasks; 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Portfolio.API.Models.JoinTables;
@@ -23,7 +23,10 @@ namespace Portfolio.API.Models
         public DateTime Created { get; set; }
         public DateTime Modified { get; set; }
 
-
+        public string Awards { get; set; }
+        public string MyRole { get; set; }
+        public string Description { get; set; }
+        public string Features { get; set; }
 
         #region Tags
         public List<PortfolioItemCategory> Categories { get; set; } = new List<PortfolioItemCategory>();

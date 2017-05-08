@@ -47,7 +47,7 @@ namespace Portfolio.API.Controllers
             if (item == null)
                 return BadRequest();
 
-            _programmingLanguageRepository.Add(item);
+            _programmingLanguageRepository.AddAndCommit(item);
             return CreatedAtRoute("GetProgrammingLanguage", new { id = item.ID }, item);
         }
 
@@ -66,7 +66,7 @@ namespace Portfolio.API.Controllers
 
             repoItem.Name = item.Name;
 
-            _programmingLanguageRepository.Update(repoItem);
+            _programmingLanguageRepository.UpdateAndCommit(repoItem);
 
             return new NoContentResult();
         }
@@ -81,7 +81,7 @@ namespace Portfolio.API.Controllers
             if (repoItem == null)
                 return NotFound();
 
-            _programmingLanguageRepository.Remove(id);
+            _programmingLanguageRepository.RemoveAndCommit(id);
             return new NoContentResult();
         }
     }

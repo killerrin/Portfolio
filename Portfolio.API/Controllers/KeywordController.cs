@@ -47,7 +47,7 @@ namespace Portfolio.API.Controllers
             if (item == null)
                 return BadRequest();
 
-            _keywordRepository.Add(item);
+            _keywordRepository.AddAndCommit(item);
             return CreatedAtRoute("GetKeyword", new { id = item.ID }, item);
         }
 
@@ -66,7 +66,7 @@ namespace Portfolio.API.Controllers
 
             repoItem.Name = item.Name;
 
-            _keywordRepository.Update(repoItem);
+            _keywordRepository.UpdateAndCommit(repoItem);
 
             return new NoContentResult();
         }
@@ -81,7 +81,7 @@ namespace Portfolio.API.Controllers
             if (repoItem == null)
                 return NotFound();
 
-            _keywordRepository.Remove(id);
+            _keywordRepository.RemoveAndCommit(id);
             return new NoContentResult();
         }
     }

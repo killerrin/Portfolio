@@ -57,7 +57,7 @@ namespace Portfolio.API.Controllers
             var userCount = _userRepository.Count + 1;
             user.Password_Hash = _authenticationService.HashPassword(userCount, item.Password);
             user.AuthToken = _authenticationService.GenerateAuthToken(userCount, user.Username);
-            _userRepository.Add(user);
+            _userRepository.AddAndCommit(user);
 
             UserAuthenticated authenticatedUser = new UserAuthenticated();
             authenticatedUser.ID = user.ID;
@@ -76,7 +76,7 @@ namespace Portfolio.API.Controllers
             if (repoItem == null)
                 return NotFound();
 
-            _userRepository.Remove(id);
+            _userRepository.RemoveAndCommit(id);
             return new NoContentResult();
         }
     }
