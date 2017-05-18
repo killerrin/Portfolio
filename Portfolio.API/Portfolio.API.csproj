@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <AssemblyName>Portfolio.API</AssemblyName>
     <RootNamespace>Portfolio.API</RootNamespace>
+    <ApplicationInsightsResourceId>/subscriptions/5ffd9dcb-b24f-4f9a-94ed-7910f78e7bac/resourcegroups/ApplicationInsightsPortfolioAPI/providers/microsoft.insights/components/Portfolio.API</ApplicationInsightsResourceId>
+    <ApplicationInsightsAnnotationResourceId>/subscriptions/5ffd9dcb-b24f-4f9a-94ed-7910f78e7bac/resourcegroups/ApplicationInsightsPortfolioAPI/providers/microsoft.insights/components/Portfolio.API</ApplicationInsightsAnnotationResourceId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +30,9 @@
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 
 </Project>
