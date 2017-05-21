@@ -28,12 +28,7 @@ namespace Portfolio.API.Models
         public string Description { get; set; }
         public string Features { get; set; }
 
-        #region Tags
-        public List<PortfolioItemCategory> Categories { get; set; } = new List<PortfolioItemCategory>();
-        public List<PortfolioItemFramework> Frameworks { get; set; } = new List<PortfolioItemFramework>();
-        public List<PortfolioItemKeyword> Keywords { get; set; } = new List<PortfolioItemKeyword>();
-        public List<PortfolioItemProgLanguage> ProgrammingLanguages { get; set; } = new List<PortfolioItemProgLanguage>();
-        #endregion
+        public List<PortfolioItemTag> Tags { get; set; } = new List<PortfolioItemTag>();
 
         public PortfolioItem()
         {

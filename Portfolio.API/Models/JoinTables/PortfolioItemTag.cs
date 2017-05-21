@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Portfolio.API.Models.JoinTables
 {
-    public class PortfolioItemFramework
+    public class PortfolioItemTag
     {
-        public int PortfolioItemID { get; set; }
         [JsonIgnore]
         public PortfolioItem PortfolioItem { get; set; }
+        public int PortfolioItemID { get; set; }
 
-        public int FrameworkID { get; set; }
         [JsonIgnore]
-        public Framework Framework { get; set; }
+        public Tag Tag { get; set; }
+        public int TagID { get; set; }
     }
 }

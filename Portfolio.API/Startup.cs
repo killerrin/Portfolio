@@ -37,20 +37,14 @@ namespace Portfolio.API
             services.AddMvc();
             services.AddLogging();
 
-            // Add Database
-
-            //services.AddDbContext<PortfolioContext>(opt => opt.UseInMemoryDatabase());
-            //var connection = @"Data Source=ANDREWPC-SKYNET;Initial Catalog=portfolio;Integrated Security=True;Pooling=False";
+            // Add Database - //services.AddDbContext<PortfolioContext>(opt => opt.UseInMemoryDatabase());
             var connection = Configuration["dbConnectionString"];
             services.AddDbContext<PortfolioContext>(options => options.UseSqlServer(connection));
 
             // Add Dependency Injection for our Repositories
             services.AddSingleton<IRepository<User>, UserRepository>();
-
-            services.AddSingleton<IRepository<ProgrammingLanguage>, ProgrammingLanguageRepository>();
-            services.AddSingleton<IRepository<Framework>, FrameworkRepository>();
-            services.AddSingleton<IRepository<Keyword>, KeywordRepository>();
-            services.AddSingleton<IRepository<Category>, CategoryRepository>();
+            services.AddSingleton<IRepository<Models.Tag>, TagRepository>();
+            services.AddSingleton<IRepository<TagType>, TagTypeRepository>();
             services.AddSingleton<IRepository<PortfolioItem>, PortfolioItemRepository>();
             services.AddSingleton<IRepository<PortfolioItemLink>, PortfolioItemLinkRepository>();
 

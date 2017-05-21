@@ -12,34 +12,34 @@ using Portfolio.API.Services;
 namespace Portfolio.API.Controllers
 {
     [Route("api/[controller]")]
-    public class ProgrammingLanguageController : Controller
+    public class TagTypeController : Controller
     {
-        private readonly IRepository<ProgrammingLanguage> _programmingLanguageRepository;
+        private readonly IRepository<TagType> _tagTypeRepository;
         private readonly AuthenticationService _authenticationService;
 
-        public ProgrammingLanguageController(IRepository<ProgrammingLanguage> pLRepository)
+        public TagTypeController(IRepository<TagType> tagTypeRepository)
         {
-            _programmingLanguageRepository = pLRepository;
-            _authenticationService = new AuthenticationService(new UserRepository(pLRepository.DatabaseInfo.Context));
+            _tagTypeRepository = tagTypeRepository;
+            _authenticationService = new AuthenticationService(new UserRepository(tagTypeRepository.DatabaseInfo.Context));
         }
         
         [HttpGet]
-        public IEnumerable<ProgrammingLanguage> GetAll()
+        public IEnumerable<TagType> GetAll()
         {
-            return _programmingLanguageRepository.GetAll();
+            return _tagTypeRepository.GetAll();
         }
 
-        [HttpGet("{id}", Name = "GetProgrammingLanguage")]
+        [HttpGet("{id}", Name = "GetTagType")]
         public IActionResult GetById(int id)
         {
-            var item = _programmingLanguageRepository.Find(id);
+            var item = _tagTypeRepository.Find(id);
             if (item == null)
                 return NotFound();
             return new ObjectResult(item);
         }
 
         [HttpPost]
-        public IActionResult Create([FromHeader(Name = "Authorization")] string authToken, [FromBody] ProgrammingLanguage item)
+        public IActionResult Create([FromHeader(Name = "Authorization")] string authToken, [FromBody] TagType item)
         {
             if (!_authenticationService.VerifyAuthToken(authToken))
                 return BadRequest("Invalid AuthToken");
@@ -47,12 +47,12 @@ namespace Portfolio.API.Controllers
             if (item == null)
                 return BadRequest();
 
-            _programmingLanguageRepository.AddAndCommit(item);
-            return CreatedAtRoute("GetProgrammingLanguage", new { id = item.ID }, item);
+            _tagTypeRepository.AddAndCommit(item);
+            return CreatedAtRoute("GetTagType", new { id = item.ID }, item);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromHeader(Name = "Authorization")] string authToken, [FromBody] ProgrammingLanguage item)
+        public IActionResult Update(int id, [FromHeader(Name = "Authorization")] string authToken, [FromBody] TagType item)
         {
             if (!_authenticationService.VerifyAuthToken(authToken))
                 return BadRequest("Invalid AuthToken");
@@ -60,13 +60,13 @@ namespace Portfolio.API.Controllers
             if (item == null || item.ID != id)
                 return BadRequest();
 
-            var repoItem = _programmingLanguageRepository.Find(id);
+            var repoItem = _tagTypeRepository.Find(id);
             if (repoItem == null)
                 return NotFound();
 
             repoItem.Name = item.Name;
 
-            _programmingLanguageRepository.UpdateAndCommit(repoItem);
+            _tagTypeRepository.UpdateAndCommit(repoItem);
 
             return new NoContentResult();
         }
@@ -77,11 +77,11 @@ namespace Portfolio.API.Controllers
             if (!_authenticationService.VerifyAuthToken(authToken))
                 return BadRequest("Invalid AuthToken");
 
-            var repoItem = _programmingLanguageRepository.Find(id);
+            var repoItem = _tagTypeRepository.Find(id);
             if (repoItem == null)
                 return NotFound();
 
-            _programmingLanguageRepository.RemoveAndCommit(id);
+            _tagTypeRepository.RemoveAndCommit(id);
             return new NoContentResult();
         }
     }

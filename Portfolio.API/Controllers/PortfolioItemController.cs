@@ -81,17 +81,11 @@ namespace Portfolio.API.Controllers
             repoItem.Features = item.Features;
 
             repoItem.Links.Clear();
-            repoItem.Categories.Clear();
-            repoItem.Frameworks.Clear();
-            repoItem.Keywords.Clear();
-            repoItem.ProgrammingLanguages.Clear();
+            repoItem.Tags.Clear();
             _portfolioItemRepository.UpdateAndCommit(repoItem);
 
             repoItem.Links = item.Links;
-            repoItem.Categories = item.Categories;
-            repoItem.Frameworks = item.Frameworks;
-            repoItem.Keywords = item.Keywords;
-            repoItem.ProgrammingLanguages = item.ProgrammingLanguages;
+            repoItem.Tags = item.Tags;
             _portfolioItemRepository.UpdateAndCommit(repoItem);
 
             return new NoContentResult();

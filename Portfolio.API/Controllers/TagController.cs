@@ -12,34 +12,34 @@ using Portfolio.API.Services;
 namespace Portfolio.API.Controllers
 {
     [Route("api/[controller]")]
-    public class FrameworkController : Controller
+    public class TagController : Controller
     {
-        private readonly IRepository<Framework> _frameworkRepository;
+        private readonly IRepository<Tag> _tagRepository;
         private readonly AuthenticationService _authenticationService;
 
-        public FrameworkController(IRepository<Framework> frameworkRepository)
+        public TagController(IRepository<Tag> tagRepository)
         {
-            _frameworkRepository = frameworkRepository;
-            _authenticationService = new AuthenticationService(new UserRepository(frameworkRepository.DatabaseInfo.Context));
+            _tagRepository = tagRepository;
+            _authenticationService = new AuthenticationService(new UserRepository(tagRepository.DatabaseInfo.Context));
         }
-
+        
         [HttpGet]
-        public IEnumerable<Framework> GetAll()
+        public IEnumerable<Tag> GetAll()
         {
-            return _frameworkRepository.GetAll();
+            return _tagRepository.GetAll();
         }
 
-        [HttpGet("{id}", Name = "GetFramework")]
+        [HttpGet("{id}", Name = "GetTag")]
         public IActionResult GetById(int id)
         {
-            var item = _frameworkRepository.Find(id);
+            var item = _tagRepository.Find(id);
             if (item == null)
                 return NotFound();
             return new ObjectResult(item);
         }
 
         [HttpPost]
-        public IActionResult Create([FromHeader(Name = "Authorization")] string authToken, [FromBody] Framework item)
+        public IActionResult Create([FromHeader(Name = "Authorization")] string authToken, [FromBody] Tag item)
         {
             if (!_authenticationService.VerifyAuthToken(authToken))
                 return BadRequest("Invalid AuthToken");
@@ -47,12 +47,12 @@ namespace Portfolio.API.Controllers
             if (item == null)
                 return BadRequest();
 
-            _frameworkRepository.AddAndCommit(item);
-            return CreatedAtRoute("GetFramework", new { id = item.ID }, item);
+            _tagRepository.AddAndCommit(item);
+            return CreatedAtRoute("GetTag", new { id = item.ID }, item);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromHeader(Name = "Authorization")] string authToken, [FromBody] Framework item)
+        public IActionResult Update(int id, [FromHeader(Name = "Authorization")] string authToken, [FromBody] Tag item)
         {
             if (!_authenticationService.VerifyAuthToken(authToken))
                 return BadRequest("Invalid AuthToken");
@@ -60,13 +60,13 @@ namespace Portfolio.API.Controllers
             if (item == null || item.ID != id)
                 return BadRequest();
 
-            var repoItem = _frameworkRepository.Find(id);
+            var repoItem = _tagRepository.Find(id);
             if (repoItem == null)
                 return NotFound();
 
             repoItem.Name = item.Name;
 
-            _frameworkRepository.UpdateAndCommit(repoItem);
+            _tagRepository.UpdateAndCommit(repoItem);
 
             return new NoContentResult();
         }
@@ -77,11 +77,11 @@ namespace Portfolio.API.Controllers
             if (!_authenticationService.VerifyAuthToken(authToken))
                 return BadRequest("Invalid AuthToken");
 
-            var repoItem = _frameworkRepository.Find(id);
+            var repoItem = _tagRepository.Find(id);
             if (repoItem == null)
                 return NotFound();
 
-            _frameworkRepository.RemoveAndCommit(id);
+            _tagRepository.RemoveAndCommit(id);
             return new NoContentResult();
         }
     }

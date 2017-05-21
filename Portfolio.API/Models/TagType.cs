@@ -9,16 +9,14 @@ using Newtonsoft.Json;
 
 namespace Portfolio.API.Models
 {
-    public class Keyword
+    public class TagType
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ID { get; set; }
         public string Name { get; set; }
 
-        [JsonIgnore]
-        public List<PortfolioItemKeyword> Portfolios { get; set; } = new List<PortfolioItemKeyword>();
-        public Keyword()
+        public TagType()
         {
 
         }

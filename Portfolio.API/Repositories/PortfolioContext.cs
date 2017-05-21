@@ -17,77 +17,28 @@ namespace Portfolio.API.Repositories
         }
 
         // Create the DbSets
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Framework> Frameworks { get; set; }
-        public DbSet<Keyword> Keywords { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<TagType> TagTypes { get; set; }
         public DbSet<PortfolioItem> PortfolioItems { get; set; }
         public DbSet<PortfolioItemLink> PortfolioItemLinks { get; set; }
-        public DbSet<ProgrammingLanguage> ProgrammingLanguages { get; set; }
         public DbSet<User> Users { get; set; }
 
         // Create the Model
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            #region Join Tables
-            #region Category Join Table
-            modelBuilder.Entity<PortfolioItemCategory>()
-                .HasKey(x => new { x.PortfolioItemID, x.CategoryID });
+            #region Tag Join Table
+            modelBuilder.Entity<PortfolioItemTag>()
+                .HasKey(x => new { x.PortfolioItemID, x.TagID });
 
-            modelBuilder.Entity<PortfolioItemCategory>()
+            modelBuilder.Entity<PortfolioItemTag>()
                 .HasOne(p => p.PortfolioItem)
-                .WithMany(pi => pi.Categories)
+                .WithMany(pi => pi.Tags)
                 .HasForeignKey(p => p.PortfolioItemID);
 
-            modelBuilder.Entity<PortfolioItemCategory>()
-                .HasOne(p => p.Category)
+            modelBuilder.Entity<PortfolioItemTag>()
+                .HasOne(p => p.Tag)
                 .WithMany(f => f.Portfolios)
-                .HasForeignKey(p => p.CategoryID);
-            #endregion
-
-            #region Framework Join Table
-            modelBuilder.Entity<PortfolioItemFramework>()
-                .HasKey(x => new { x.PortfolioItemID, x.FrameworkID });
-
-            modelBuilder.Entity<PortfolioItemFramework>()
-                .HasOne(p => p.PortfolioItem)
-                .WithMany(pi => pi.Frameworks)
-                .HasForeignKey(p => p.PortfolioItemID);
-
-            modelBuilder.Entity<PortfolioItemFramework>()
-                .HasOne(p => p.Framework)
-                .WithMany(f => f.Portfolios)
-                .HasForeignKey(p => p.FrameworkID);
-            #endregion
-
-            #region Keyword Join Table
-            modelBuilder.Entity<PortfolioItemKeyword>()
-                .HasKey(x => new { x.PortfolioItemID, x.KeywordID });
-
-            modelBuilder.Entity<PortfolioItemKeyword>()
-                .HasOne(p => p.PortfolioItem)
-                .WithMany(pi => pi.Keywords)
-                .HasForeignKey(p => p.PortfolioItemID);
-
-            modelBuilder.Entity<PortfolioItemKeyword>()
-                .HasOne(p => p.Keyword)
-                .WithMany(f => f.Portfolios)
-                .HasForeignKey(p => p.KeywordID);
-            #endregion
-
-            #region Programming Language Join Table
-            modelBuilder.Entity<PortfolioItemProgLanguage>()
-                .HasKey(x => new { x.PortfolioItemID, x.ProgrammingLanguageID });
-
-            modelBuilder.Entity<PortfolioItemProgLanguage>()
-                .HasOne(p => p.PortfolioItem)
-                .WithMany(pi => pi.ProgrammingLanguages)
-                .HasForeignKey(p => p.PortfolioItemID);
-
-            modelBuilder.Entity<PortfolioItemProgLanguage>()
-                .HasOne(p => p.ProgrammingLanguage)
-                .WithMany(f => f.Portfolios)
-                .HasForeignKey(p => p.ProgrammingLanguageID);
-            #endregion
+                .HasForeignKey(p => p.TagID);
             #endregion
 
             modelBuilder.Entity<User>()
@@ -95,7 +46,6 @@ namespace Portfolio.API.Repositories
 
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.AuthToken);
-
         }
     }
 }
