@@ -40,6 +40,21 @@ namespace Portfolio.API.Models
         [DataType(DataType.Password)]
         public string Password { get; set; }
     }
+
+    public class UserGet
+    {
+        [Required]
+        public int ID { get; set; }
+
+        [Required]
+        public string Username { get; set; }
+
+        [Required]
+        [EmailAddress]
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
+    }
+
     public class UserCreate
     {
         [Required]

@@ -24,6 +24,26 @@ namespace Portfolio.API.Controllers
             _authenticationService = new AuthenticationService(userRepository);
         }
 
+        [HttpGet("{id}", Name = "GetUser")]
+        public IActionResult GetById(int id, [FromHeader(Name = "Authorization")] string authToken)
+        {
+            // Verify the Authorization Token
+            if (!_authenticationService.VerifyAuthTokenAndID(id, authToken))
+                return BadRequest("Invalid AuthToken");
+
+            // Get the user
+            var item = _userRepository.Find(id);
+            if (item == null)
+                return NotFound();
+
+            // Create the safe copy and return
+            UserGet user = new UserGet();
+            user.ID = item.ID;
+            user.Username = item.Username;
+            user.Email = item.Email;
+            return new ObjectResult(user);
+        }
+
         [HttpPost(Name = "CreateUser")]
         public IActionResult Create([FromBody] UserCreate item)
         {
