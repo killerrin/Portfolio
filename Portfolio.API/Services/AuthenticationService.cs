@@ -63,15 +63,12 @@ namespace Portfolio.API.Services
             if (string.IsNullOrWhiteSpace(authToken))
                 return false;
 
-            var user = _userRepository.GetAllQuery()
-                .Where(x => x.ID == id)
-                .Where(x => x.AuthToken.Equals(authToken))
-                .FirstOrDefault();
+            var user = _userRepository.Find(id);
 
             if (user == null)
                 return false;
 
-            return true;
+            return user.AuthToken.Equals(authToken);
         }
 
         public string GenerateAuthToken(int id, string username)
