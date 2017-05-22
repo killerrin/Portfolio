@@ -24,7 +24,7 @@ namespace Portfolio.API.Controllers
             _authenticationService = new AuthenticationService(userRepository);
         }
 
-        [HttpPost(Name ="CreateUser")]
+        [HttpPost(Name = "CreateUser")]
         public IActionResult Create([FromBody] UserCreate item)
         {
             if (!AuthenticationService.EnableUserCreation)
@@ -56,7 +56,7 @@ namespace Portfolio.API.Controllers
 
             var userCount = _userRepository.Count + 1;
             user.Password_Hash = _authenticationService.HashPassword(userCount, item.Password);
-            user.AuthToken = _authenticationService.GenerateAuthToken(userCount, user.Username);
+            user.AuthToken = _authenticationService.GenerateAuthToken(userCount, item.Username);
             _userRepository.AddAndCommit(user);
 
             UserAuthenticated authenticatedUser = new UserAuthenticated();
@@ -64,6 +64,61 @@ namespace Portfolio.API.Controllers
             authenticatedUser.Username = user.Username;
             authenticatedUser.AuthToken = user.AuthToken;
             return new ObjectResult(authenticatedUser);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromHeader(Name = "Authorization")] string authToken, [FromBody] UserEdit item)
+        {
+            if (item == null)
+                return BadRequest();
+            if (string.IsNullOrWhiteSpace(item.Username) || string.IsNullOrWhiteSpace(item.Email) || string.IsNullOrWhiteSpace(item.CurrentPassword))
+                return BadRequest("Please provide all Username, Email and Current Password");
+
+            // Verify the Authorization Token
+            if (!_authenticationService.VerifyAuthTokenAndID(id, authToken))
+                return BadRequest("Invalid AuthToken");
+
+            // Validate the Inputs
+            if (!_authenticationService.ValidateUsername(item.Username))
+                return BadRequest("The username is invalid, has already been taken or does not meet the minimum requirements");
+            if (!_authenticationService.ValidateEmail(item.Email))
+                return BadRequest("The email contains invalid characters or does not meet the minimum requirements");
+            if (!_authenticationService.ValidatePassword(item.CurrentPassword))
+                return BadRequest("The current password contains invalid characters or does not meet the minimum requirements");
+
+            // Get the current user
+            var repoItem = _userRepository.Find(id);
+            if (repoItem == null)
+                return NotFound();
+
+            // Make sure the current password is correctly set as a third layer of security
+            if (_authenticationService.VerifyPassword(item.CurrentPassword, repoItem.Password_Hash))
+            {
+                var userCount = _userRepository.Count + 1;
+                if (!string.IsNullOrWhiteSpace(item.NewPassword))
+                {
+                    if (!_authenticationService.ValidatePassword(item.NewPassword))
+                        return BadRequest("The new password contains invalid characters or does not meet the minimum requirements");
+
+                    repoItem.Password_Hash = _authenticationService.HashPassword(userCount, item.NewPassword);
+                    repoItem.AuthToken = _authenticationService.GenerateAuthToken(userCount, item.Username);
+                }
+
+                repoItem.Username = item.Username;
+                repoItem.Email = item.Email;
+
+                // Update the user
+                _userRepository.UpdateAndCommit(repoItem);
+
+                // Return the new authenticated user
+                UserAuthenticated authenticatedUser = new UserAuthenticated();
+                authenticatedUser.ID = repoItem.ID;
+                authenticatedUser.Username = repoItem.Username;
+                authenticatedUser.AuthToken = repoItem.AuthToken;
+                return new ObjectResult(authenticatedUser);
+            }
+
+            return BadRequest("Current Password is incorrect");
         }
 
         [HttpDelete("{id}")]
