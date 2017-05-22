@@ -65,6 +65,7 @@ namespace Portfolio.API.Controllers
                 return NotFound();
 
             repoItem.Name = item.Name;
+            repoItem.TagTypeID = item.TagTypeID;
 
             _tagRepository.UpdateAndCommit(repoItem);
 
