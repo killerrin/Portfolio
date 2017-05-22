@@ -31,7 +31,7 @@ namespace Portfolio.API.Controllers
                 return BadRequest("User Creation is currently disabled by the administrator ");
 
             if (string.IsNullOrWhiteSpace(item.Username) || string.IsNullOrWhiteSpace(item.Email) || string.IsNullOrWhiteSpace(item.Password))
-                return BadRequest("Please provide all Username, Email and Password");
+                return BadRequest("Please provide Username and Current Password");
 
             // Get the User and Authenticate
             User user = _userRepository.GetAllQuery()
@@ -44,11 +44,11 @@ namespace Portfolio.API.Controllers
 
             // Validate the Inputs
             if (!_authenticationService.ValidateUsername(item.Username))
-                return BadRequest("The username is invalid or has already been taken");
+                return BadRequest("The username is invalid, has already been taken or does not meet the minimum requirements");
             if (!_authenticationService.ValidateEmail(item.Email))
-                return BadRequest("The email is invalid");
+                return BadRequest("The email is invalid or does not meet the minimum requirements");
             if (!_authenticationService.ValidatePassword(item.Password))
-                return BadRequest("The password is invalid");
+                return BadRequest("The password is invalid or does not meet the minimum requirements");
 
             user = new User();
             user.Username = item.Username;
@@ -71,20 +71,12 @@ namespace Portfolio.API.Controllers
         {
             if (item == null)
                 return BadRequest();
-            if (string.IsNullOrWhiteSpace(item.Username) || string.IsNullOrWhiteSpace(item.Email) || string.IsNullOrWhiteSpace(item.CurrentPassword))
-                return BadRequest("Please provide all Username, Email and Current Password");
+            if (string.IsNullOrWhiteSpace(item.CurrentPassword))
+                return BadRequest("Please provide Username and Current Password");
 
             // Verify the Authorization Token
             if (!_authenticationService.VerifyAuthTokenAndID(id, authToken))
                 return BadRequest("Invalid AuthToken");
-
-            // Validate the Inputs
-            if (!_authenticationService.ValidateUsername(item.Username))
-                return BadRequest("The username is invalid, has already been taken or does not meet the minimum requirements");
-            if (!_authenticationService.ValidateEmail(item.Email))
-                return BadRequest("The email contains invalid characters or does not meet the minimum requirements");
-            if (!_authenticationService.ValidatePassword(item.CurrentPassword))
-                return BadRequest("The current password contains invalid characters or does not meet the minimum requirements");
 
             // Get the current user
             var repoItem = _userRepository.Find(id);
@@ -94,18 +86,44 @@ namespace Portfolio.API.Controllers
             // Make sure the current password is correctly set as a third layer of security
             if (_authenticationService.VerifyPassword(item.CurrentPassword, repoItem.Password_Hash))
             {
-                var userCount = _userRepository.Count + 1;
+                // If the new username doesn't equal the current username...
+                if (!string.IsNullOrWhiteSpace(item.NewUsername))
+                {
+                    if (!_authenticationService.ValidateUsername(item.NewUsername))
+                        return BadRequest("The new username is invalid, has already been taken or does not meet the minimum requirements");
+
+                    // Search that new username to determine if it is available
+                    User user = _userRepository.GetAllQuery()
+                        .Where(x => x.Username.Equals(item.NewUsername))
+                        .FirstOrDefault();
+
+                    // If it isn't, notify the user it is unavailable
+                    if (user != null)
+                        return BadRequest("This user already exists");
+
+                    // Otherwise, set the new username
+                    repoItem.Username = item.NewUsername;
+                }
+
+                // If we have a new password, go through the steps to generate a new password and auth token
                 if (!string.IsNullOrWhiteSpace(item.NewPassword))
                 {
                     if (!_authenticationService.ValidatePassword(item.NewPassword))
                         return BadRequest("The new password contains invalid characters or does not meet the minimum requirements");
 
+                    var userCount = _userRepository.Count + 1;
                     repoItem.Password_Hash = _authenticationService.HashPassword(userCount, item.NewPassword);
-                    repoItem.AuthToken = _authenticationService.GenerateAuthToken(userCount, item.Username);
+                    repoItem.AuthToken = _authenticationService.GenerateAuthToken(userCount, repoItem.Username);
                 }
 
-                repoItem.Username = item.Username;
-                repoItem.Email = item.Email;
+                // Determine if we need to change the email
+                if (!string.IsNullOrWhiteSpace(item.NewEmail))
+                {
+                    if (_authenticationService.ValidateEmail(item.NewEmail))
+                        repoItem.Email = item.NewEmail;
+                    else
+                        return BadRequest("The email contains invalid characters or does not meet the minimum requirements");
+                }
 
                 // Update the user
                 _userRepository.UpdateAndCommit(repoItem);
