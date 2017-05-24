@@ -82,10 +82,12 @@ namespace Portfolio.API.Controllers
 
             repoItem.Links.Clear();
             repoItem.Tags.Clear();
+            repoItem.RelatedItems.Clear();
             _portfolioItemRepository.UpdateAndCommit(repoItem);
 
             repoItem.Links = item.Links;
             repoItem.Tags = item.Tags;
+            repoItem.RelatedItems = item.RelatedItems;
             _portfolioItemRepository.UpdateAndCommit(repoItem);
 
             return new NoContentResult();

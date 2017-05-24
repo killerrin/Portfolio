@@ -29,6 +29,7 @@ namespace Portfolio.API.Models
         public string Features { get; set; }
 
         public List<PortfolioItemTag> Tags { get; set; } = new List<PortfolioItemTag>();
+        public List<PortfolioItemRelatedItem> RelatedItems { get; set; } = new List<PortfolioItemRelatedItem>();
 
         public PortfolioItem()
         {

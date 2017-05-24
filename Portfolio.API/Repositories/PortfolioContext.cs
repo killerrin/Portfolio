@@ -21,6 +21,7 @@ namespace Portfolio.API.Repositories
         public DbSet<TagType> TagTypes { get; set; }
         public DbSet<PortfolioItem> PortfolioItems { get; set; }
         public DbSet<PortfolioItemLink> PortfolioItemLinks { get; set; }
+        public DbSet<RelatedItem> RelatedItems { get; set; }
         public DbSet<User> Users { get; set; }
 
         // Create the Model
@@ -39,6 +40,21 @@ namespace Portfolio.API.Repositories
                 .HasOne(p => p.Tag)
                 .WithMany(f => f.Portfolios)
                 .HasForeignKey(p => p.TagID);
+            #endregion
+
+            #region Related Item Join Table
+            modelBuilder.Entity<PortfolioItemRelatedItem>()
+                .HasKey(x => new { x.PortfolioItemID, x.RelatedItemID });
+
+            modelBuilder.Entity<PortfolioItemRelatedItem>()
+                .HasOne(p => p.PortfolioItem)
+                .WithMany(pi => pi.RelatedItems)
+                .HasForeignKey(p => p.PortfolioItemID);
+
+            modelBuilder.Entity<PortfolioItemRelatedItem>()
+                .HasOne(p => p.RelatedItem)
+                .WithMany(f => f.Portfolios)
+                .HasForeignKey(p => p.RelatedItemID);
             #endregion
 
             modelBuilder.Entity<User>()
