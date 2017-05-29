@@ -15,6 +15,7 @@ namespace Portfolio.API.Repositories
             //Add(new TagType { Name = "Framework" });
             //Add(new TagType { Name = "Keyword" });
             //Add(new TagType { Name = "Programming Language" });
+			//Add(new TagType { Name = "Tools" });
             //Add(new TagType { Name = "Other" });
         }
     }
