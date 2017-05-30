@@ -20,7 +20,6 @@ namespace Portfolio.API.Controllers
         private readonly IRepository<Tag> _tagRepository;
         private readonly IRepository<TagType> _tagTypeRepository;
 
-
         private readonly AuthenticationService _authenticationService;
 
         public SearchController(IRepository<PortfolioItem> portfolioItemRepository, IRepository<PortfolioItemLink> portfolioItemLinkRepository, IRepository<Tag> tagRepository, IRepository<TagType> tagTypeRepository)
@@ -34,24 +33,46 @@ namespace Portfolio.API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<PortfolioItem> Search([FromQuery]string tags)
+        public IEnumerable<PortfolioItem> Search([FromQuery]IEnumerable<string> searchTerms)
         {
-            var allPortfolioItems = _portfolioItemRepository.GetAll();
             List<PortfolioItem> matchedItems = new List<PortfolioItem>();
 
+            // Go through all the portfolio items and include all the matches
+            var allPortfolioItems = _portfolioItemRepository.GetAll();
             foreach (var item in allPortfolioItems)
             {
-
+                foreach (var term in searchTerms)
+                {
+                    if (ContainsKeyword(item, term) || ContainsTag(item, term))
+                    {
+                        matchedItems.Add(item);
+                    }
+                }
             }
 
             return matchedItems;
         }
-    }
 
-    public class SearchTerms
-    {
-        public string Keyword { get; set; }
-        public string Tag { get; set; }
-        public bool Exclude { get; set; }
+        private bool ContainsKeyword(PortfolioItem item, string keyword)
+        {
+            if (string.IsNullOrWhiteSpace(keyword))
+                return false;
+
+            return item.Title.ToLower().Contains(keyword.ToLower());
+        }
+
+        private bool ContainsTag(PortfolioItem item, string tag)
+        {
+            if (string.IsNullOrWhiteSpace(tag))
+                return false;
+
+            foreach (var itemTag in item.Tags)
+            {
+                if (itemTag.Tag.Name.ToLower().Contains(tag.ToLower()))
+                    return true;
+            }
+
+            return false;
+        }
     }
 }
