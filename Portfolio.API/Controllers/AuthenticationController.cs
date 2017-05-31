@@ -24,6 +24,14 @@ namespace Portfolio.API.Controllers
             _authenticationService = new AuthenticationService(userRepository);
         }
 
+        [HttpPost("{id}", Name = "VerifyAuthToken")]
+        public IActionResult VerifyAuthToken(int id, [FromHeader(Name = "Authorization")] string authToken)
+        {
+            // Verify the Authorization Token
+            if (_authenticationService.VerifyAuthTokenAndID(id, authToken))
+                return Ok();
+            return BadRequest("Invalid AuthToken");
+        }
 
         [HttpPost(Name = "Login")]
         public IActionResult Login([FromBody] UserLogin item)
