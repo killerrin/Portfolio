@@ -32,9 +32,9 @@ namespace Portfolio.API.Services
         }
 
         #region Password
-        private const int WorkFactor = 13;
+        private const int WorkFactor = 12;
         public void FakeHash() => BCrypt.Net.BCrypt.HashPassword("", WorkFactor);
-        public string HashPassword(int id, string password) => BCrypt.Net.BCrypt.HashPassword(password, WorkFactor + id);
+        public string HashPassword(string password) => BCrypt.Net.BCrypt.HashPassword(password, WorkFactor + _random.Next(0, 3));
         public bool VerifyPassword(string password, string hash) => BCrypt.Net.BCrypt.Verify(password, hash);
         public bool IsPasswordExpired(DateTime? expiry)
         {
@@ -64,6 +64,21 @@ namespace Portfolio.API.Services
                 return false;
 
             var user = _userRepository.Find(id);
+
+            if (user == null)
+                return false;
+
+            return user.AuthToken.Equals(authToken);
+        }
+
+        public bool VerifyAuthTokenAndUsername(string username, string authToken)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+                return false;
+            if (string.IsNullOrWhiteSpace(authToken))
+                return false;
+
+            var user = _userRepository.GetAllQuery().Where(x => x.Username.ToLower().Equals(username.ToLower())).FirstOrDefault();
 
             if (user == null)
                 return false;

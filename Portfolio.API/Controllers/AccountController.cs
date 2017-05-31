@@ -55,7 +55,7 @@ namespace Portfolio.API.Controllers
 
             // Get the User and Authenticate
             User user = _userRepository.GetAllQuery()
-                    .Where(x => x.Username.Equals(item.Username))
+                    .Where(x => x.Username.ToLower().Equals(item.Username.ToLower()))
                     .FirstOrDefault();
 
             // If the user exists, ABORT!
@@ -75,7 +75,7 @@ namespace Portfolio.API.Controllers
             user.Email = item.Email;
 
             var userCount = _userRepository.Count + 1;
-            user.Password_Hash = _authenticationService.HashPassword(userCount, item.Password);
+            user.Password_Hash = _authenticationService.HashPassword(item.Password);
             user.AuthToken = _authenticationService.GenerateAuthToken(userCount, item.Username);
             _userRepository.AddAndCommit(user);
 
@@ -114,7 +114,7 @@ namespace Portfolio.API.Controllers
 
                     // Search that new username to determine if it is available
                     User user = _userRepository.GetAllQuery()
-                        .Where(x => x.Username.Equals(item.NewUsername))
+                        .Where(x => x.Username.ToLower().Equals(item.NewUsername.ToLower()))
                         .FirstOrDefault();
 
                     // If it isn't, notify the user it is unavailable
@@ -131,9 +131,8 @@ namespace Portfolio.API.Controllers
                     if (!_authenticationService.ValidatePassword(item.NewPassword))
                         return BadRequest("The new password contains invalid characters or does not meet the minimum requirements");
 
-                    var userCount = _userRepository.Count + 1;
-                    repoItem.Password_Hash = _authenticationService.HashPassword(userCount, item.NewPassword);
-                    repoItem.AuthToken = _authenticationService.GenerateAuthToken(userCount, repoItem.Username);
+                    repoItem.Password_Hash = _authenticationService.HashPassword(item.NewPassword);
+                    repoItem.AuthToken = _authenticationService.GenerateAuthToken(repoItem.ID, repoItem.Username);
                 }
 
                 // Determine if we need to change the email
