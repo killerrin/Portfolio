@@ -70,6 +70,7 @@ namespace Portfolio.API.Controllers
                 return NotFound();
 
             repoItem.Title = item.Title;
+            repoItem.CoverImageUrl = item.CoverImageUrl;
             repoItem.SourceCodeUrl = item.SourceCodeUrl;
             repoItem.Published = item.Published;
 

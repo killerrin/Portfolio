@@ -15,6 +15,9 @@ namespace Portfolio.API.Models
         public int ID { get; set; }
         public string Title { get; set; }
 
+        [DataType(DataType.ImageUrl)]
+        public string CoverImageUrl { get; set; }
+
         [DataType(DataType.Url)]
         public string SourceCodeUrl { get; set; }
         public List<PortfolioItemLink> Links { get; set; } = new List<PortfolioItemLink>();

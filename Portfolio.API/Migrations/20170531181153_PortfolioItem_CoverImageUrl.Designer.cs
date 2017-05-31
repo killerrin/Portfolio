@@ -9,9 +9,10 @@ using Portfolio.API.Models.Enums;
 namespace Portfolio.API.Migrations
 {
     [DbContext(typeof(PortfolioContext))]
-    partial class PortfolioContextModelSnapshot : ModelSnapshot
+    [Migration("20170531181153_PortfolioItem_CoverImageUrl")]
+    partial class PortfolioItem_CoverImageUrl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
