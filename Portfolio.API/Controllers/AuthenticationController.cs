@@ -25,7 +25,7 @@ namespace Portfolio.API.Controllers
         }
 
         [HttpPost("{id}", Name = "VerifyAuthToken")]
-        public IActionResult VerifyAuthToken(int id, [FromHeader(Name = "Authorization")] string authToken)
+        public IActionResult VerifyAuthToken(int id, [Required][FromHeader(Name = "Authorization")] string authToken)
         {
             // Verify the Authorization Token
             if (_authenticationService.VerifyAuthTokenAndID(id, authToken))

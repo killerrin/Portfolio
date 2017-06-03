@@ -25,7 +25,7 @@ namespace Portfolio.API.Controllers
         }
 
         [HttpGet("{id}", Name = "GetUser")]
-        public IActionResult GetById(int id, [FromHeader(Name = "Authorization")] string authToken)
+        public IActionResult GetById(int id, [Required][FromHeader(Name = "Authorization")] string authToken)
         {
             // Verify the Authorization Token
             if (!_authenticationService.VerifyAuthTokenAndID(id, authToken))
@@ -87,7 +87,7 @@ namespace Portfolio.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromHeader(Name = "Authorization")] string authToken, [FromBody] UserEdit item)
+        public IActionResult Update(int id, [Required][FromHeader(Name = "Authorization")] string authToken, [FromBody] UserEdit item)
         {
             if (item == null)
                 return BadRequest();
@@ -159,7 +159,7 @@ namespace Portfolio.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id, [FromHeader(Name = "Authorization")] string authToken)
+        public IActionResult Delete(int id, [Required][FromHeader(Name = "Authorization")] string authToken)
         {
             if (!_authenticationService.VerifyAuthTokenAndID(id, authToken))
                 return BadRequest("Invalid AuthToken");

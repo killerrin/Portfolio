@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Portfolio.API.Models;
 using Portfolio.API.Repositories;
 using Portfolio.API.Services;
+using System.ComponentModel.DataAnnotations;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -39,7 +40,7 @@ namespace Portfolio.API.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromHeader(Name = "Authorization")] string authToken, [FromBody] Tag item)
+        public IActionResult Create([Required][FromHeader(Name = "Authorization")] string authToken, [FromBody] Tag item)
         {
             if (!_authenticationService.VerifyAuthToken(authToken))
                 return BadRequest("Invalid AuthToken");
@@ -52,7 +53,7 @@ namespace Portfolio.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromHeader(Name = "Authorization")] string authToken, [FromBody] Tag item)
+        public IActionResult Update(int id, [Required][FromHeader(Name = "Authorization")] string authToken, [FromBody] Tag item)
         {
             if (!_authenticationService.VerifyAuthToken(authToken))
                 return BadRequest("Invalid AuthToken");
@@ -73,7 +74,7 @@ namespace Portfolio.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id, [FromHeader(Name = "Authorization")] string authToken)
+        public IActionResult Delete(int id, [Required][FromHeader(Name = "Authorization")] string authToken)
         {
             if (!_authenticationService.VerifyAuthToken(authToken))
                 return BadRequest("Invalid AuthToken");
