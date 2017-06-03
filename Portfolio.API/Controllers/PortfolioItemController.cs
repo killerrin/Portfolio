@@ -26,9 +26,20 @@ namespace Portfolio.API.Controllers
         }
         
         [HttpGet]
-        public IEnumerable<PortfolioItem> GetAll()
+        public IEnumerable<PortfolioItem> GetPublished()
         {
-            return _portfolioItemRepository.GetAll();
+            var published = _portfolioItemRepository.GetAll().Where(x => x.Published);
+            return published;
+        }
+
+        [HttpGet("admin", Name = "AdminGetAllPortfolioItems")]
+        public IActionResult GetAllPortfolioItems([FromHeader(Name = "Authorization")] string authToken)
+        {
+            // Verify the Authorization Token
+            if (!_authenticationService.VerifyAuthToken(authToken))
+                return BadRequest("Invalid AuthToken");
+
+            return new ObjectResult(_portfolioItemRepository.GetAll());
         }
 
         [HttpGet("{id}", Name = "GetPortfolioItem")]
