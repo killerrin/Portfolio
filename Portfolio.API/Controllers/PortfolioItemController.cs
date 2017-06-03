@@ -35,16 +35,6 @@ namespace Portfolio.API.Controllers
             return _portfolioItemRepository.GetAllQuery().Where(x => x.Published);
         }
 
-        //[HttpGet("admin", Name = "AdminGetAllPortfolioItems")]
-        //public IActionResult GetAllPortfolioItems([FromHeader(Name = "Authorization")] string authToken)
-        //{
-        //    // Verify the Authorization Token
-        //    if (!_authenticationService.VerifyAuthToken(authToken))
-        //        return BadRequest("Invalid AuthToken");
-
-        //    return new ObjectResult(_portfolioItemRepository.GetAll());
-        //}
-
         [HttpGet("{id}", Name = "GetPortfolioItem")]
         public IActionResult GetById(int id, [FromHeader(Name = "Authorization")] string authToken)
         {
@@ -62,20 +52,6 @@ namespace Portfolio.API.Controllers
 
             return NotFound();
         }
-
-        //[HttpGet("{id}/admin", Name = "AdminGetPortfolioItem")]
-        //public IActionResult GetById(int id, [FromHeader(Name = "Authorization")] string authToken)
-        //{
-        //    // Verify the Authorization Token
-        //    if (!_authenticationService.VerifyAuthToken(authToken))
-        //        return BadRequest("Invalid AuthToken");
-
-        //    var item = _portfolioItemRepository.Find(id);
-        //    if (item == null)
-        //        return NotFound();
-
-        //    return new ObjectResult(item);
-        //}
 
         [HttpPost]
         public IActionResult Create([FromHeader(Name = "Authorization")] string authToken, [FromBody] PortfolioItem item)
