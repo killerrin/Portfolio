@@ -33,12 +33,18 @@ namespace Portfolio.API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<PortfolioItem> Search([FromQuery]IEnumerable<string> searchTerms)
+        public IEnumerable<PortfolioItem> Search([FromQuery]IEnumerable<string> searchTerms, [FromHeader(Name = "Authorization")] string authToken)
         {
             List<PortfolioItem> matchedItems = new List<PortfolioItem>();
 
             // Go through all the portfolio items and include all the matches
-            var allPortfolioItems = _portfolioItemRepository.GetAll();
+            List<PortfolioItem> allPortfolioItems;
+            if (_authenticationService.VerifyAuthToken(authToken))
+                allPortfolioItems = _portfolioItemRepository.GetAll().ToList();
+            else
+                allPortfolioItems = _portfolioItemRepository.GetAllQuery().Where(x => x.Published).ToList();
+
+
             foreach (var item in allPortfolioItems)
             {
                 foreach (var term in searchTerms)

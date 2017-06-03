@@ -26,30 +26,56 @@ namespace Portfolio.API.Controllers
         }
         
         [HttpGet]
-        public IEnumerable<PortfolioItem> GetPublished()
-        {
-            var published = _portfolioItemRepository.GetAll().Where(x => x.Published);
-            return published;
-        }
-
-        [HttpGet("admin", Name = "AdminGetAllPortfolioItems")]
-        public IActionResult GetAllPortfolioItems([FromHeader(Name = "Authorization")] string authToken)
+        public IEnumerable<PortfolioItem> GetAll([FromHeader(Name = "Authorization")] string authToken)
         {
             // Verify the Authorization Token
-            if (!_authenticationService.VerifyAuthToken(authToken))
-                return BadRequest("Invalid AuthToken");
+            if (_authenticationService.VerifyAuthToken(authToken))
+                return _portfolioItemRepository.GetAll();
 
-            return new ObjectResult(_portfolioItemRepository.GetAll());
+            return _portfolioItemRepository.GetAllQuery().Where(x => x.Published);
         }
 
+        //[HttpGet("admin", Name = "AdminGetAllPortfolioItems")]
+        //public IActionResult GetAllPortfolioItems([FromHeader(Name = "Authorization")] string authToken)
+        //{
+        //    // Verify the Authorization Token
+        //    if (!_authenticationService.VerifyAuthToken(authToken))
+        //        return BadRequest("Invalid AuthToken");
+
+        //    return new ObjectResult(_portfolioItemRepository.GetAll());
+        //}
+
         [HttpGet("{id}", Name = "GetPortfolioItem")]
-        public IActionResult GetById(int id)
+        public IActionResult GetById(int id, [FromHeader(Name = "Authorization")] string authToken)
         {
             var item = _portfolioItemRepository.Find(id);
             if (item == null)
                 return NotFound();
-            return new ObjectResult(item);
+
+            // Verify the Authorization Token
+            if (_authenticationService.VerifyAuthToken(authToken))
+                return new ObjectResult(item);
+
+            // If the Authorization fails, we cant give out Non-published articles
+            if (item.Published)
+                return new ObjectResult(item);
+
+            return NotFound();
         }
+
+        //[HttpGet("{id}/admin", Name = "AdminGetPortfolioItem")]
+        //public IActionResult GetById(int id, [FromHeader(Name = "Authorization")] string authToken)
+        //{
+        //    // Verify the Authorization Token
+        //    if (!_authenticationService.VerifyAuthToken(authToken))
+        //        return BadRequest("Invalid AuthToken");
+
+        //    var item = _portfolioItemRepository.Find(id);
+        //    if (item == null)
+        //        return NotFound();
+
+        //    return new ObjectResult(item);
+        //}
 
         [HttpPost]
         public IActionResult Create([FromHeader(Name = "Authorization")] string authToken, [FromBody] PortfolioItem item)
