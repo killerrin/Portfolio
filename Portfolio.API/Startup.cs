@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Portfolio.API.Models;
 using Portfolio.API.Repositories;
 using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
 
 namespace Portfolio.API
 {
@@ -33,8 +35,21 @@ namespace Portfolio.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add Cors
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
+
             // Add framework services.
             services.AddMvc();
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new CorsAuthorizationFilterFactory("MyPolicy"));
+            });
+
             services.AddLogging();
 
             // Add Database - //services.AddDbContext<PortfolioContext>(opt => opt.UseInMemoryDatabase());
@@ -49,14 +64,6 @@ namespace Portfolio.API
             services.AddSingleton<IRepository<PortfolioItemLink>, PortfolioItemLinkRepository>();
             services.AddSingleton<IRepository<RelatedItem>, RelatedItemRepository>();
 
-            // Enable Cors
-            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
-            {
-                builder.AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       .AllowAnyHeader();
-            }));
-
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -70,11 +77,11 @@ namespace Portfolio.API
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            //app.UseMvcWithDefaultRoute();
-            app.UseMvc();
-
             // Enable Cors
             app.UseCors("MyPolicy");
+
+            //app.UseMvcWithDefaultRoute();
+            app.UseMvc();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

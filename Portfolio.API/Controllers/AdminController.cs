@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using Portfolio.API.Models;
 using Portfolio.API.Repositories;
 using Portfolio.API.Services;
+using Microsoft.AspNetCore.Cors;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Portfolio.API.Controllers
 {
     [Route("api/[controller]")]
+    [EnableCors("MyPolicy")]
     public class AdminController : Controller
     {
         private readonly IRepository<PortfolioItem> _portfolioItemRepository;
