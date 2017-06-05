@@ -49,6 +49,14 @@ namespace Portfolio.API
             services.AddSingleton<IRepository<PortfolioItemLink>, PortfolioItemLinkRepository>();
             services.AddSingleton<IRepository<RelatedItem>, RelatedItemRepository>();
 
+            // Enable Cors
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
+
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -64,6 +72,9 @@ namespace Portfolio.API
 
             //app.UseMvcWithDefaultRoute();
             app.UseMvc();
+
+            // Enable Cors
+            app.UseCors("MyPolicy");
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
