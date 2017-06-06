@@ -13,6 +13,7 @@ using Portfolio.API.Repositories;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
+using Portfolio.API.Middleware;
 
 namespace Portfolio.API
 {
@@ -35,22 +36,10 @@ namespace Portfolio.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add Cors
-            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
-            {
-                builder.AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       .AllowAnyHeader();
-            }));
-
             // Add framework services.
             services.AddMvc();
-            services.Configure<MvcOptions>(options =>
-            {
-                options.Filters.Add(new CorsAuthorizationFilterFactory("MyPolicy"));
-            });
-
             services.AddLogging();
+            services.AddCors();
 
             // Add Database - //services.AddDbContext<PortfolioContext>(opt => opt.UseInMemoryDatabase());
             var connection = Configuration["dbConnectionString"];
@@ -74,13 +63,22 @@ namespace Portfolio.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            // Enable custom Middleware to force Cross Site Access
+            app.UseSecurityHeadersMiddleware(new SecurityHeadersBuilder()
+                .AddDefaultSecurePolicy()
+                .AddCustomHeader("Access-Control-Allow-Origin", "http://localhost:3000")
+                .AddCustomHeader("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PUT, PATCH, DELETE")
+                .AddCustomHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Content-Type")
+                .AddCustomHeader("X-Developer-Message", "<3 killerrin"));
+
+            // Enable Logging
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            // Enable Cors
-            app.UseCors("MyPolicy");
+            app.UseCors(
+                options => options.WithOrigins("http://localhost:3000").AllowAnyMethod()
+            );
 
-            //app.UseMvcWithDefaultRoute();
             app.UseMvc();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.

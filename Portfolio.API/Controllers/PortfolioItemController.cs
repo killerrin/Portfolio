@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Cors;
 namespace Portfolio.API.Controllers
 {
     [Route("api/[controller]")]
-    [EnableCors("MyPolicy")]
+    //[EnableCors("CorsEverythingPolicy")]
     public class PortfolioItemController : Controller
     {
         private readonly IRepository<PortfolioItem> _portfolioItemRepository;

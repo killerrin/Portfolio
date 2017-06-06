@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Cors;
 namespace Portfolio.API.Controllers
 {
     [Route("api/[controller]")]
-    [EnableCors("MyPolicy")]
+    //[EnableCors("CorsEverythingPolicy")]
     public class TagController : Controller
     {
         private readonly IRepository<Tag> _tagRepository;
