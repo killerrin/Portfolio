@@ -68,7 +68,7 @@ namespace Portfolio.API
                 .AddDefaultSecurePolicy()
                 .AddCustomHeader("Access-Control-Allow-Origin", "http://localhost:3000")
                 .AddCustomHeader("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PUT, PATCH, DELETE")
-                .AddCustomHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Content-Type")
+                .AddCustomHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Content-Type, Authorization")
                 .AddCustomHeader("X-Developer-Message", "<3 killerrin"));
 
             // Enable Logging
