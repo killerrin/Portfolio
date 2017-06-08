@@ -66,9 +66,9 @@ namespace Portfolio.API
             // Enable custom Middleware to force Cross Site Access
             app.UseSecurityHeadersMiddleware(new SecurityHeadersBuilder()
                 .AddDefaultSecurePolicy()
-                .AddCustomHeader("Access-Control-Allow-Origin", "http://localhost:3000")
-                .AddCustomHeader("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PUT, PATCH, DELETE")
-                .AddCustomHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Content-Type, Authorization")
+                //.AddCustomHeader("Access-Control-Allow-Origin", "http://localhost:3000")
+                //.AddCustomHeader("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PUT, PATCH, DELETE")
+                //.AddCustomHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Content-Type, Authorization")
                 .AddCustomHeader("X-Developer-Message", "<3 killerrin"));
 
             // Enable Logging
@@ -76,7 +76,9 @@ namespace Portfolio.API
             loggerFactory.AddDebug();
 
             app.UseCors(
-                options => options.WithOrigins("http://localhost:3000").AllowAnyMethod()
+                options => options.AllowAnyOrigin()//.WithOrigins("http://localhost:3000")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
             );
 
             app.UseMvc();
