@@ -35,7 +35,18 @@ namespace Portfolio.API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<PortfolioItem> Search([FromQuery]IEnumerable<string> searchTerms, [FromHeader(Name = "Authorization")] string authToken)
+        public IEnumerable<PortfolioItem> SearchGet([FromHeader(Name = "Authorization")] string authToken, [FromQuery]IEnumerable<string> searchTerms)
+        {
+            return PreformSearch(authToken, searchTerms);
+        }
+
+        [HttpPost]
+        public IEnumerable<PortfolioItem> SearchPost([FromHeader(Name = "Authorization")] string authToken, [FromBody]IEnumerable<string> searchTerms)
+        {
+            return PreformSearch(authToken, searchTerms);
+        }
+
+        private IEnumerable<PortfolioItem> PreformSearch(string authToken, IEnumerable<string> searchTerms)
         {
             List<PortfolioItem> matchedItems = new List<PortfolioItem>();
 
@@ -57,6 +68,10 @@ namespace Portfolio.API.Controllers
                     }
                 }
             }
+
+            matchedItems = matchedItems.GroupBy(x => x.ID)
+                .Select(x => x.First())
+                .ToList();
 
             return matchedItems;
         }
